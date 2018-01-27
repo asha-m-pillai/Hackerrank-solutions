@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    int q;
+    cin >> q;
+    for(int a0 = 0; a0 < q; a0++){
+        int n;
+        int m;
+        cin >> n >> m;
+        vector<int> edgeList[n+1];
+        
+        //prepare adjacency list
+        for(int a1 = 0; a1 < m; a1++){
+            int u;
+            int v;
+            cin >> u >> v;
+            
+            if (find(edgeList[u].begin(),edgeList[u].end(), v) == edgeList[u].end())
+                edgeList[u].push_back(v);
+            if (find(edgeList[v].begin(),edgeList[v].end(), u) == edgeList[v].end())
+                edgeList[v].push_back(u);
+        }
+        
+        int s;
+        cin >> s;
+        
+        int shortList[n+1] = {0};
+        bool *visited = new bool[n+1];
+        for(int i = 0; i < n+1; i++)
+            visited[i] = false;
+        
+        queue<int> bfs;
+        int start, stop;
+        bfs.push(s);
+        visited[s]=true;
+        shortList[s]=0;
+        do{
+            start=bfs.front();
+            bfs.pop();
+            for(int i=0; i<edgeList[start].size();i++)
+            {   
+                stop = edgeList[start][i];
+                if (visited[stop] == true)
+                    continue;
+                bfs.push(stop);
+                visited[stop] = true;
+                if (shortList[stop] == 0)
+                    shortList[stop] = shortList[start] + 6;
+            }
+        }while(!bfs.empty());   
+        
+        // displaying output
+        for (int i=1; i<n+1; i++)
+        {
+            if (i == s)
+                continue;
+            if (shortList[i] == 0)
+                cout << "-1" << " " ;
+            else
+                cout << shortList[i] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
